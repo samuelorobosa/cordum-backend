@@ -14,11 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-
 //Auth Routes
 Route::group([
     'prefix' => 'auth',
@@ -40,7 +35,6 @@ Route::group([
     Route::get('{id}', 'NoteController@show')->name('gkc.note.show');
     Route::put('{id}', 'NoteController@update')->name('gkc.note.update');
     Route::delete('{id}', 'NoteController@destroy')->name('gkc.note.delete');
-//    Route::get('labels/{id}', 'NoteController@labels')->name('gkc.note.delete');
 });
 
 //Labels
@@ -50,4 +44,5 @@ Route::group([
     'middleware' => 'auth:sanctum',
 ], function(){
     Route::get('', 'LabelController@index')->name('gkc.label.index');
+    Route::post('create', 'LabelController@store')->name('gkc.label.store');
 });

@@ -38,18 +38,6 @@ class User extends Authenticatable
      *
      * @var array<string, string>
      */
-//    public function manyThroughMany($related, $through, $firstKey, $secondKey, $pivotKey)
-//    {
-//        $model = new $related;
-//        $table = $model->getTable();
-//        $throughModel = new $through;
-//        $pivot = $throughModel->getTable();
-//
-//        return $model
-//            ->join($pivot, $pivot . '.' . $pivotKey, '=', $table . '.' . $secondKey)
-//            ->select($table . '.*')
-//            ->where($pivot . '.' . $firstKey, '=', $this->id);
-//    }
 
     protected $casts = [
         'email_verified_at' => 'datetime',
@@ -58,6 +46,11 @@ class User extends Authenticatable
     public function notes()
     {
         return $this->hasMany(Note::class);
+    }
+
+    public function labels()
+    {
+        return $this->hasMany(Label::class);
     }
 
 }

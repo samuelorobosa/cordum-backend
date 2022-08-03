@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Label;
 
 use App\Http\Controllers\Controller;
+use App\Models\Label;
 use App\Models\Note;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -19,51 +20,35 @@ class LabelController extends Controller
     {
         //Get all labels for authenticated user
         $authenticatedUser = $request->user();
-        $labels = $authenticatedUser->notes()->labels();
-    }
+        $relationships = $authenticatedUser::with('notes', 'notes.labels')->get();
+        $labels = array();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        foreach ($relationships as $userrelationship){
+             foreach ($userrelationship['notes'] as $userNotes){
+                 $labels[] = $userNotes['labels'];
+             }
+        }
+
+        return response()->json($labels);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
         //
+        $authenticatedUser = $request->user();
+        $authenticatedUser->labels()->create([
+            'name' => $request['name']
+        ]);
+
+        return response()->json(['message'=> "Label successfully created", 'label'=> $request['name']], 201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -75,6 +60,7 @@ class LabelController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $authenticatedUser = $request->user();
     }
 
     /**
