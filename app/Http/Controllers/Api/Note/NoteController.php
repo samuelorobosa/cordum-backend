@@ -106,22 +106,4 @@ class NoteController extends Controller
         ], 200);
     }
 
-//    public function labels(Request $request, $id)
-//    {
-//        $note = Note::findOrFail($id);
-////        @dd($note);
-//        $labels = $note->labels()->get(['name']);
-//        foreach ($labels as $label){
-//            $labelsArray = [$label];
-//        }
-//
-////        @dd($labels);
-//
-//        return $labelsArray;
-//
-////        return response()->json([
-////            'message' => 'Note successfully deleted'
-////        ], 200);
-//    }
-
 }

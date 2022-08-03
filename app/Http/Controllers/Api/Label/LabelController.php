@@ -55,22 +55,34 @@ class LabelController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, $id)
     {
         //
         $authenticatedUser = $request->user();
+        $authenticatedUser->labels()->where('id', $id)->update(['name'=> $request['name']]);
+
+        return response()->json([
+            'message' => "Label successfully updated",
+            'label' => $request['name']
+        ],200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         //
+        $authenticatedUser = $request->user();
+        $authenticatedUser->labels()->where('id', $id)->delete();
+
+        return response()->json([
+            'message' => "Label successfully deleted",
+        ],200);
     }
 }

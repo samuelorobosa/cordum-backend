@@ -45,4 +45,6 @@ Route::group([
 ], function(){
     Route::get('', 'LabelController@index')->name('gkc.label.index');
     Route::post('create', 'LabelController@store')->name('gkc.label.store');
+    Route::put('update/{id}', 'LabelController@update')->name('gkc.label.update');
+    Route::delete('delete/{id}', 'LabelController@destroy')->name('gkc.label.destroy');
 });
