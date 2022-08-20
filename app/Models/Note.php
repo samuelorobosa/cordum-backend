@@ -19,7 +19,8 @@ class Note extends Model
     ];
 
 
-    public function labels(){
+    public function labels(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
         return $this->belongsToMany(Label::class);
     }
 

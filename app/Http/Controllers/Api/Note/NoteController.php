@@ -5,21 +5,24 @@ namespace App\Http\Controllers\Api\Note;
 use App\Http\Controllers\Controller;
 use App\Models\Note;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use JetBrains\PhpStorm\NoReturn;
 
 class NoteController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         //display all notes of user
         $authenticatedUser = $request->user();
-        $userNotes = $authenticatedUser->notes()->get(['id', 'body']);
+        $userNotes = $authenticatedUser->notes()->with('labels')->latest()->get(['id', 'body']);
 
         return response()->json([
             'notes' => $userNotes
@@ -30,10 +33,10 @@ class NoteController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         //Create a new note
         $authenticatedUser = $request->user();
@@ -56,17 +59,18 @@ class NoteController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
      */
-    public function show(Request $request, $id)
+    public function show(Request $request, $id): JsonResponse
     {
         //Get a specific note
         $authenticatedUser = $request->user();
-        $note = $authenticatedUser->notes()->where('id', $id)->get('body');
+        $note[] = $authenticatedUser->notes()->where('id', $id)->get('body');
 
         return response()->json([
-            'note' => $note
+            'notes' => $note
         ],200);
 
     }
@@ -74,11 +78,11 @@ class NoteController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id): JsonResponse
     {
         //Update specific note
         $authenticatedUser = $request->user();
@@ -92,10 +96,11 @@ class NoteController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
      */
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, int $id): JsonResponse
     {
         //Delete note
         $authenticatedUser = $request->user();
@@ -103,6 +108,22 @@ class NoteController extends Controller
 
         return response()->json([
             'message' => 'Note successfully deleted'
+        ], 200);
+    }
+
+    /**
+     * Attach Labels to Specified Note.
+     *
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function syncLabel(Request $request, int $id): JsonResponse
+    {
+        //Sync labels to note
+        Note::findOrFail($id)->labels()->sync([...$request['labels']]);
+        return response()->json([
+            'message' => "Sync Successful"
         ], 200);
     }
 
