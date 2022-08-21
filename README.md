@@ -27,8 +27,8 @@ I used a bunch of tech in building this but to mention a few of them;
 ## Setup
 1. Run `git clone`
 2. Cd into `Cordum-Backend`
-3. Run `php artisan serve`
-4. Open `[http://127.0.0.1:8000]`
-5. You should be able to see the application in action.
-6. Continue to [Cordum-Frontend](https://github.com/samuelorobosa/cordum-frontend) and follow the next steps.
-7. Configure the env file for your database.
+3. Configure your `.env` file.
+4. Run `php artisan serve`
+5. Open `[http://127.0.0.1:8000]`
+6. Continue to [Cordum-Frontend](https://github.com/samuelorobosa/cordum-frontend) and follow the steps there.
+7. Start hacking!
